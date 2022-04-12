@@ -1,42 +1,39 @@
 import React from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
-import { Layout, Typography, Space } from 'antd'
-import { Navbar } from './components'
 import './App.css'
-import Products from './components/Products';
-import About from './components/About';
+import { Routes, Route } from 'react-router-dom'
+import { Layout } from 'antd'
+import Home from './components/Home';
 import Contact from './components/Contact';
-import Homepage from './components/Homepage';
+import { Navbar, NavItem, DropdownMenu } from './components/Navbar';
+import { ReactComponent as BellIcon } from './icons/bell.svg';
+import { ReactComponent as BoltIcon } from './icons/bolt.svg';
+import { ReactComponent as CaretIcon } from './icons/caret.svg';
+import { ReactComponent as MessengerIcon } from './icons/messenger.svg';
+import { ReactComponent as PlusIcon } from './icons/plus.svg';
+
 
 const App = () => {
     return (
         <div className="app">
-            <div className="navbar">
-                <Navbar />
-            </div>
-            <div className='main'>
+            <div>
+            <Navbar>
+                <NavItem icon={<PlusIcon />} />
+                <NavItem icon={<BellIcon />} />
+                <NavItem icon={<BoltIcon />} />
+
+                <NavItem icon={<CaretIcon />}>
+                    <DropdownMenu />
+
+                </NavItem>
+            </Navbar>
                 <Layout>
                     <div className='routes'>
                         <Routes>
-                            <Route path='/' element={<Homepage />} />
-                            <Route path='/About' element={<About />} />
-                            <Route path='/Products' element={<Products />} />
-                            <Route path='/Contact' element={<Contact />} />                             
+                            <Route path='/' element={<Home />} />                           
+                            <Route path='/Contact' element={<Contact />} />                           
                         </Routes>
                     </div>
                 </Layout>
-                <div className='footer'>
-                    <Typography.Title level={5} style={{ color: 'white', textAlign: 'center'}}>
-                        Collab Project <br />
-                        All Rights Reserved
-                    </Typography.Title>
-                    <Space>
-                        <Link to="/">Home</Link>
-                        <Link to="/About">Exchanges</Link>
-                        <Link to="/Products">Products</Link>
-                        <Link to="/Contact">Contact</Link>
-                    </Space>
-                </div>
             </div>
         </div>
     )

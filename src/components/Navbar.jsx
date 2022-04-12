@@ -1,73 +1,82 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Menu, Typography, Avatar } from 'antd';
-import { Link } from 'react-router-dom'
-import { HomeOutlined, BulbOutlined, FundOutlined, MenuOutlined, ContactsOutlined, BellOutlined } from '@ant-design/icons'
-import icon from '../assets/react-one.jpg'
-import { isDisabled } from '@testing-library/user-event/dist/utils';
-import styled from 'styled-components';
+import React, { useState } from 'react'
+import '../App.css';
+import { ReactComponent as ChevronIcon } from '../icons/chevron.svg';
+import { ReactComponent as CogIcon } from '../icons/cog.svg';
+import { ReactComponent as ArrowIcon } from '../icons/arrow.svg';
+import { CSSTransition } from 'react-transition-group';
 
+export function Navbar(props) {
+    return (
+        <nav className="navbar">
+            <ul className="navbar-nav">
+                {props.children}
+            </ul>
+        </nav>
+    )
+}
 
-const Navbar = () => {
-    const [activeMenu, setActiveMenu] = useState(true);
-    const [screenSize, setScreenSize] = useState(null);
-    const [visitCount, setVisitCount] = useState(0);
+export function NavItem(props) {
 
-    useEffect(() => {
-        const handleResize = () => setScreenSize(window.innerWidth);
-
-        window.addEventListener('resize', handleResize);
-
-        handleResize();
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
-        if (screenSize < 768) {
-            setActiveMenu(false);
-        } else {
-            setActiveMenu(true);
-        }
-
-    }, [screenSize])
+    const [open, setOpen] = useState(false);
 
     return (
-        <div className='nav-container'>
-            <div className='logo-container'>
-                <Avatar src={icon} size="large" />
-                <Typography.Title level={2} className="logo">
-                    <Link to="/">Collaboration</Link>
-                </Typography.Title>
-                <Button className="menu-control-container" onClick={() => setActiveMenu(!activeMenu)}>
-                    <MenuOutlined />
-                </Button>
-            </div>
-            {activeMenu && (
-                <Menu theme="dark">
-                    <Menu.Item icon={<BellOutlined/>}>
-                        <Button id='checkIn' onClick={() => setVisitCount(visitCount + 1)}>Check in</Button>
-                    </Menu.Item>
-                    <Menu.Item>
-                        <p>You are Visitor #{visitCount}</p>
-                    </Menu.Item>
-                    <Menu.Item icon={<HomeOutlined />}>
-                        <Link to="/">Home</Link>
-                    </Menu.Item>
-                    <Menu.Item icon={<BulbOutlined />}>
-                        <Link to="/about">About</Link>
-                    </Menu.Item>
-                    <Menu.Item icon={<FundOutlined />}>
-                        <Link to="/products">Products</Link>
-                    </Menu.Item>
-                    <Menu.Item icon={<ContactsOutlined />}>
-                        <Link to="/contact">Contact</Link>
-                    </Menu.Item>
+        <li className="nav-item">
+            <a href="#" className="icon-button" onClick={() => setOpen(!open)}>
+                {props.icon}
+            </a>
 
-                </Menu>
-            )}
+            {open && props.children}
+        </li>
+    )
+}
+
+export function DropdownMenu() {
+
+    const [activeMenu, setActiveMenu] = useState('main');
+
+    function DropdownItem(props) {
+        return (
+            <a href="#" className='menu-item' onClick={() => props.goToMenu && setActiveMenu(props.goToMenu)}>
+                <span className="icon-button">{props.leftIcon}</span>
+                {props.children}
+                <span className="icon-right">{props.rightIcon}</span>
+            </a>
+        )
+    }
+    return (
+        <div className="dropdown">
+            <CSSTransition
+                in={activeMenu === 'main'}
+                unmountOnExit
+                timeout={500}
+                classNames="menu-primary"
+            >
+                <div className="menu">
+
+                    <DropdownItem>My Profile</DropdownItem>
+                    <DropdownItem
+                        leftIcon={<CogIcon />}
+                        rightIcon={<ChevronIcon />}
+                        goToMenu="settings"
+                    >
+                        Settings
+                    </DropdownItem>
+
+                </div>
+            </CSSTransition>
+            <CSSTransition
+                in={activeMenu === 'settings'}
+                unmountOnExit
+                timeout={500}
+                classNames="menu-secondary"
+            >
+                <div className="menu">
+
+                    <DropdownItem leftIcon={<ArrowIcon />} goToMenu="main" />
+                    <DropdownItem>Settings</DropdownItem>
+                </div>
+            </CSSTransition>
         </div>
     )
 }
 
-
-export default Navbar

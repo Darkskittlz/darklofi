@@ -1,14 +1,12 @@
 import '../App.css';
 import React, { Suspense, useCallback, useMemo, useRef } from 'react';
 import { Canvas, extend, useFrame, useLoader, useThree } from 'react-three-fiber';
-import typewriter from '../assets/notMyType.otf';
 import * as THREE from 'three';
 import circleImg from '../assets/circle.png';
-import { fadeImages } from '../constants/constants';
 import styled from 'styled-components';
-import { Fade } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import Video from './Video';
 extend({ OrbitControls })
 
 
@@ -126,9 +124,9 @@ const TitleBox = styled.div`
     display: flex;
     position: fixed;
     z-index: 998;
-    width: calc(100% - 200px);
+    width: 100%;
     justify-content: center;
-    margin-top: 70px;
+    margin-top: 20px;
     @media (max-width: 860px){
         display: flex;
         justify-content: center;
@@ -138,7 +136,7 @@ const TitleBox = styled.div`
 
 const Title = styled.h1`
     font-size: 70px;
-    font-family: 'Yellowtail', cursive;
+    font-family: 'yellowtail', cursive;
     margin-bottom: 0;
     color: white;
 `
@@ -146,16 +144,9 @@ const Title = styled.h1`
 
 const Body = styled.div`
     display: flex;
-    justify-content: center;
     flex-direction: column;
-    align-content: center;
-    row-gap: 0rem;
-    width: 40%;
-    top: 10%;
-    left: 38.5%;
-    z-index: 995;
+    z-index: 999;
     position: fixed;
-    height: 100%;
 
     @media (max-width: 860px){
         display: flex;
@@ -169,31 +160,28 @@ const Body = styled.div`
 `
 
 const Card = styled.div`
-        height: 100%;
-        width: 100%;
         flex-direction: column;
-        backdrop-filter: blur(4px);
-        z-index: 998;
-        background-image: url(fadeImage.url),
+        margin-top: 120px;
+        display: flex;
+        z-index: 999;
+        width: 100%;
 
         img {
             object-fit: cover;
-            width: 100%;
             height: 100%;
             text-align: center;
-
             @media (max-width: 860px){
             height: 100%;
-        }
+            }
         }
 
         h1 {
             font-size: 25px;
             font-family: "notMyType";
             color: white;
-            width: 100%;
             text-align: center;
             z-index: 999;
+            backdrop-filter: blur(10px);
         }
 
         p {
@@ -210,23 +198,24 @@ const Card = styled.div`
         }
     `
 
+const Container = styled.div`
+        display: flex;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        background-color: #b3b1b113;
+        border-radius: 10px;
+    `
 
 
-
-const ProductGrid = () => {
+const LofiContainer = () => {
     return (
         <>
             <Body>
-                <Fade>
-                    {fadeImages.map((fadeImage, index) => (
-                        <div className="each-fade" key={index}>
-                            <Card>
-                                <img src={fadeImage.url} />
-                            </Card>
-                            <h2>{fadeImage.caption}</h2>
-                        </div>
-                    ))}
-                </Fade>
+                <Card>
+                    <Container>
+                        <Video />
+                    </Container>
+                </Card>
             </Body>
         </>
     )
@@ -235,11 +224,13 @@ const ProductGrid = () => {
 
 
 
-const Products = () => {
+const Home = () => {
     return (
         <>
-            <ProductGrid />
-            <TitleBox><Title>Products</Title></TitleBox>
+            <TitleBox>
+                <Title>DarkMeowFi</Title>
+                <LofiContainer />
+            </TitleBox>
             <div className="anim">
                 <Suspense fallback={<div>Loading...</div>}>
                     <AnimationCanvas />
@@ -249,4 +240,4 @@ const Products = () => {
     );
 };
 
-export default Products;
+export default Home;
